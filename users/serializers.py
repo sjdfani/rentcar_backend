@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import ValidationError
 from .models import CustomUser, EmailCode
-from .utils import get_tokens_for_user, str_generator, get_user_messages
+from .utils import str_generator, get_user_messages
 from .tasks import send_email
 
 
@@ -66,7 +66,7 @@ class RegisterSerializer(serializers.Serializer):
         code = str_generator(5, True)
         obj = EmailCode.objects.get_or_create(user=user)[0]
         obj.set_unique_id_and_code(code)
-        # send_email.delay(code, user.email, type="verify_email")
+        # send_email.delay(code, user.email)
         print(f"Verify code: {code}")
 
     def create(self, validated_data):
@@ -114,7 +114,7 @@ class ForgotPasswordSerializer(serializers.Serializer):
         code = str_generator(5, True)
         obj = EmailCode.objects.get_or_create(user=user)[0]
         obj.set_unique_id_and_code(code)
-        # send_email.delay(code, user.email, type="forgot_password")
+        # send_email.delay(code, user.email)
         print(f"code: {code}")
         return obj.unique_id
 
