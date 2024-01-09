@@ -10,3 +10,15 @@ class CreateManufacturer(generics.CreateAPIView):
     permission_classes = (IsSuperuser,)
     serializer_class = ManufacturerSerializer
     queryset = Manufacturer.objects.all()
+
+
+class ManufacturerList(generics.ListAPIView):
+    permission_classes = (IsSuperuser,)
+    serializer_class = ManufacturerSerializer
+    queryset = Manufacturer.objects.all()
+
+
+class RetrieveUpdateDestroyManufacturer(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsSuperuser,)
+    serializer_class = ManufacturerSerializer
+    queryset = Manufacturer.objects.all()
