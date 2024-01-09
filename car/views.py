@@ -1,3 +1,12 @@
-from django.shortcuts import render
+from rest_framework import generics
+from .models import Manufacturer
+from users.permissions import IsSuperuser
+from .serializers import (
+    ManufacturerSerializer,
+)
 
-# Create your views here.
+
+class CreateManufacturer(generics.CreateAPIView):
+    permission_classes = (IsSuperuser,)
+    serializer_class = ManufacturerSerializer
+    queryset = Manufacturer.objects.all()
