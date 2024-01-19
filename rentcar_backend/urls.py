@@ -29,6 +29,7 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/v1/users/', include('users.urls'), name='users'),
     path('api/v1/car/', include('car.urls'), name='car'),
+    path('api/v1/city/', include('city.urls'), name='city'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
