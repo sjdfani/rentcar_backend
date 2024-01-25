@@ -6,7 +6,8 @@ from .views import (
     RetrieveUpdateDestroyCarOptions, CreateCarOptions, CreateCarYear,
     RetrieveUpdateDestroyCarYear, CreateCarTemplate, CarTemplateList,
     RetrieveUpdateDestroyCarTemplate, CreateColor, RetrieveUpdateDestroyColor,
-    CommentList, RetrieveDestroyComment,  GetCarByStatus,
+    CommentList, RetrieveDestroyComment,  GetCarByStatus, CarOptionsList,
+    CarYearList, ColorList, CarList,
 )
 
 app_name = "panel"
@@ -33,11 +34,15 @@ urlpatterns = [
 
     path("car/options/create/", CreateCarOptions.as_view(),
          name="CreateCarOptions"),
+    path("car/options/list/", CarOptionsList.as_view(),
+         name="CarOptionsList"),
     path("car/options/list/<int:pk>/", RetrieveUpdateDestroyCarOptions.as_view(),
          name="RetrieveUpdateDestroyCarOptions"),
 
     path("year/create/", CreateCarYear.as_view(),
          name="CreateCarYear"),
+    path("year/create/", CarYearList.as_view(),
+         name="CarYearList"),
     path("year/list/<int:pk>/", RetrieveUpdateDestroyCarYear.as_view(),
          name="RetrieveUpdateDestroyCarYear"),
 
@@ -50,6 +55,8 @@ urlpatterns = [
 
     path("color/create/", CreateColor.as_view(),
          name="CreateColor"),
+    path("color/list/", ColorList.as_view(),
+         name="ColorList"),
     path("color/list/<int:pk>/", RetrieveUpdateDestroyColor.as_view(),
          name="RetrieveUpdateDestroyColor"),
 
@@ -60,4 +67,6 @@ urlpatterns = [
 
     path("car/list/status/<str:status>/", GetCarByStatus.as_view(),
          name="GetCarByStatus"),
+    path("car/all/list/", CarList.as_view(),
+         name="CarList"),
 ]

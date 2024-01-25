@@ -65,6 +65,12 @@ class CreateCarOptions(generics.CreateAPIView):
     queryset = CarOptions.objects.all()
 
 
+class CarOptionsList(generics.ListAPIView):
+    permission_classes = (IsSuperuser,)
+    serializer_class = CarOptionsSerializer
+    queryset = CarOptions.objects.all()
+
+
 class RetrieveUpdateDestroyCarOptions(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsSuperuser,)
     serializer_class = CarOptionsSerializer
@@ -72,6 +78,12 @@ class RetrieveUpdateDestroyCarOptions(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CreateCarYear(generics.CreateAPIView):
+    permission_classes = (IsSuperuser,)
+    serializer_class = CarYearSerializer
+    queryset = CarYear.objects.all()
+
+
+class CarYearList(generics.ListAPIView):
     permission_classes = (IsSuperuser,)
     serializer_class = CarYearSerializer
     queryset = CarYear.objects.all()
@@ -102,6 +114,12 @@ class RetrieveUpdateDestroyCarTemplate(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CreateColor(generics.CreateAPIView):
+    permission_classes = (IsSuperuser,)
+    serializer_class = ColorSerializer
+    queryset = Color.objects.all()
+
+
+class ColorList(generics.ListAPIView):
     permission_classes = (IsSuperuser,)
     serializer_class = ColorSerializer
     queryset = Color.objects.all()
@@ -138,3 +156,9 @@ class GetCarByStatus(generics.ListAPIView):
         elif status == CarStatus.REJECTED:
             return Car.objects.filter(status=CarStatus.REJECTED)
         return Car.objects.none()
+
+
+class CarList(generics.ListAPIView):
+    permission_classes = (IsSuperuser,)
+    serializer_class = CarSerializer
+    queryset = Car.objects.all()
