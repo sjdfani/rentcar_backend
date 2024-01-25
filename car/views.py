@@ -12,6 +12,7 @@ from .serializers import (
 )
 
 # Fix CarList -> date range
+# change queryset of CarList
 
 
 class ManufacturerList(generics.ListAPIView):
@@ -46,11 +47,7 @@ class CarYearList(generics.ListAPIView):
 class ColorList(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ColorSerializer
-
-    def get_queryset(self):
-        if self.request.user.is_superuser:
-            return Color.objects.all()
-        return Color.objects.filter(status=True)
+    queryset = Color.objects.filter(status=True)
 
 
 class CreateCar(generics.CreateAPIView):
