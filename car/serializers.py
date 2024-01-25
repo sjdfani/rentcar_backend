@@ -14,6 +14,8 @@ class ManufacturerSerializer(serializers.ModelSerializer):
 
 
 class CarModelSerializer(serializers.ModelSerializer):
+    manufacturers = ManufacturerSerializer()
+
     class Meta:
         model = CarModel
         fields = "__all__"
