@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     CreateManufacturer,  RetrieveUpdateDestroyManufacturer,
     CreateCarModel,  RetrieveUpdateDestroyCarModel, CreateCategory,
-    RetrieveUpdateDestroyCategory, CategoryList,
+    RetrieveUpdateDestroyCategory, CategoryList, AllCarModelList,
     RetrieveUpdateDestroyCarOptions, CreateCarOptions, CreateCarYear,
     RetrieveUpdateDestroyCarYear, CreateCarTemplate, CarTemplateList,
     RetrieveUpdateDestroyCarTemplate, CreateColor, RetrieveUpdateDestroyColor,
@@ -19,6 +19,8 @@ urlpatterns = [
 
     path("car/model/create/", CreateCarModel.as_view(),
          name="CreateCarModel"),
+    path("car/model/list/", AllCarModelList.as_view(),
+         name="AllCarModelList"),
     path("car/model/list/<int:pk>/", RetrieveUpdateDestroyCarModel.as_view(),
          name="RetrieveUpdateDestroyCarModel"),
 

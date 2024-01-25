@@ -29,6 +29,12 @@ class CreateCarModel(generics.CreateAPIView):
     queryset = CarModel.objects.all()
 
 
+class AllCarModelList(generics.ListAPIView):
+    permission_classes = (IsSuperuser,)
+    serializer_class = CarModelSerializer
+    queryset = CarModel.objects.all()
+
+
 class RetrieveUpdateDestroyCarModel(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsSuperuser,)
     serializer_class = CarModelSerializer
