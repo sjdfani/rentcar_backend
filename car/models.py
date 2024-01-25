@@ -150,6 +150,8 @@ class Car(BaseModel):
     has_media = models.BooleanField(verbose_name=_("Has_Media"), default=False)
     has_complete_info = models.BooleanField(
         verbose_name=_("Has_Complete_Info"), default=False)
+    # is_available = models.BooleanField(
+    #     verbose_name=_("Is_Available"), default=True)
 
     def __str__(self) -> str:
         return self.owner.email
