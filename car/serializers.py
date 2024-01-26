@@ -66,6 +66,7 @@ class CarTemplateSerializer(serializers.ModelSerializer):
 
 
 class UpdateCarTemplateSerializer(serializers.ModelSerializer):
+    Technical_specifications = TechnicalSpecificationsSerializer()
 
     class Meta:
         model = CarTemplate
