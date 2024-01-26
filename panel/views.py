@@ -1,4 +1,7 @@
 from rest_framework import generics
+from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework.response import Response
 from users.permissions import IsSuperuser
 from car.models import (
     Manufacturer, CarModel, Category, CarOptions, CarYear, CarTemplate, Car,
@@ -96,10 +99,16 @@ class RetrieveUpdateDestroyCarYear(generics.RetrieveUpdateDestroyAPIView):
     queryset = CarYear.objects.all()
 
 
-class CreateCarTemplate(generics.CreateAPIView):
+class CreateCarTemplate(APIView):
     permission_classes = (IsSuperuser,)
-    serializer_class = CreateCarTemplateSerializer
-    queryset = CarTemplate.objects.all()
+
+    def post(self, request):
+        serializer = CreateCarTemplateSerializer(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(status=status.HTTP_201_CREATED)
 
 
 class CarTemplateList(generics.ListAPIView):
