@@ -21,6 +21,18 @@ class CarModelSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class CreateCarModelSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CarModel
+        fields = "__all__"
+
+    def validate_name(self, value):
+        if CarModel.objects.filter(name=value).exists():
+            raise serializers.ValidationError("This car model is exists.")
+        return value
+
+
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category

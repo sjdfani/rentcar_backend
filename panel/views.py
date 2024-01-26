@@ -8,6 +8,7 @@ from car.serializers import (
     ManufacturerSerializer, CarModelSerializer, CategorySerializer,
     CarOptionsSerializer, CarYearSerializer, CreateCarTemplateSerializer,
     CarTemplateSerializer, ColorSerializer, CarSerializer,  CommentSerializer,
+    CreateCarModelSerializer,
 )
 
 
@@ -25,7 +26,7 @@ class RetrieveUpdateDestroyManufacturer(generics.RetrieveUpdateDestroyAPIView):
 
 class CreateCarModel(generics.CreateAPIView):
     permission_classes = (IsSuperuser,)
-    serializer_class = CarModelSerializer
+    serializer_class = CreateCarModelSerializer
     queryset = CarModel.objects.all()
 
 
