@@ -65,6 +65,26 @@ class CarTemplateSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class UpdateCarTemplateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CarTemplate
+        fields = "__all__"
+
+    def update(self, instance, validated_data):
+        instance.model = validated_data.get("model", instance.model)
+        technical_specifications = validated_data.get(
+            "Technical_specifications", None)
+        if technical_specifications:
+            obj = TechnicalSpecifications.objects.create(
+                **technical_specifications)
+            instance.Technical_specifications = obj
+        category = validated_data.get(category, None)
+        if category:
+            instance.category.set(category)
+        instance.save()
+
+
 class CreateCarTemplateSerializer(serializers.Serializer):
     model = serializers.PrimaryKeyRelatedField(
         queryset=CarModel.objects.all()

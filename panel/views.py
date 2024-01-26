@@ -11,7 +11,7 @@ from car.serializers import (
     ManufacturerSerializer, CarModelSerializer, CategorySerializer,
     CarOptionsSerializer, CarYearSerializer, CreateCarTemplateSerializer,
     CarTemplateSerializer, ColorSerializer, CarSerializer,  CommentSerializer,
-    CreateCarModelSerializer,
+    CreateCarModelSerializer, UpdateCarTemplateSerializer,
 )
 
 
@@ -119,8 +119,12 @@ class CarTemplateList(generics.ListAPIView):
 
 class RetrieveUpdateDestroyCarTemplate(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsSuperuser,)
-    serializer_class = CarTemplateSerializer
     queryset = CarTemplate.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.method in ["GET", "DELETE"]:
+            return CarTemplateSerializer
+        return UpdateCarTemplateSerializer
 
 
 class CreateColor(generics.CreateAPIView):
