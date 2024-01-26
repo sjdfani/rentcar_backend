@@ -62,7 +62,7 @@ class CreateCarTemplateSerializer(serializers.Serializer):
     cylinder = serializers.IntegerField()
     capacity = serializers.IntegerField()
     category = serializers.PrimaryKeyRelatedField(
-        queryset=CarModel.objects.all(), many=True
+        queryset=Category.objects.all(), many=True
     )
 
     def validate_model(self, value):

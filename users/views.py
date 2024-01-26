@@ -43,7 +43,14 @@ class Register(APIView):
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        email = serializer.validated_data.get('email')
+        user = CustomUser.objects.get(email=email)
+        user.update_last_login()
+        message = {
+            "user": UserSerializer(user).data,
+            "tokens": get_tokens_for_user(user),
+        }
+        return Response(message, status=status.HTTP_201_CREATED)
 
 
 class ChangePassword(APIView):

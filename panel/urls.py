@@ -41,7 +41,7 @@ urlpatterns = [
 
     path("year/create/", CreateCarYear.as_view(),
          name="CreateCarYear"),
-    path("year/create/", CarYearList.as_view(),
+    path("year/list/", CarYearList.as_view(),
          name="CarYearList"),
     path("year/list/<int:pk>/", RetrieveUpdateDestroyCarYear.as_view(),
          name="RetrieveUpdateDestroyCarYear"),

@@ -62,20 +62,20 @@ class RegisterSerializer(serializers.Serializer):
                 {"passwords": get_user_messages("equal_passwords")})
         return attrs
 
-    def send_verify_code(self, user: CustomUser):
-        code = str_generator(5, True)
-        obj = EmailCode.objects.get_or_create(user=user)[0]
-        obj.set_unique_id_and_code(code)
-        # send_email.delay(code, user.email)
-        print(f"Verify code: {code}")
+    # def send_verify_code(self, user: CustomUser):
+    #     code = str_generator(5, True)
+    #     obj = EmailCode.objects.get_or_create(user=user)[0]
+    #     obj.set_unique_id_and_code(code)
+    #     # send_email.delay(code, user.email)
+    #     print(f"Verify code: {code}")
 
     def create(self, validated_data):
         validated_data.pop("password1")
         password = validated_data.pop("password2")
         user = CustomUser.objects.create(**validated_data)
         user.set_password(password)
-        user.disable_user()
-        self.send_verify_code(user)
+        # user.disable_user()
+        # self.send_verify_code(user)
         return user
 
 
