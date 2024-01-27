@@ -55,10 +55,17 @@ class CreateReserveSerializer(serializers.Serializer):
 
 
 class ChangeReserveStatusSerializer(serializers.Serializer):
-    reserve = serializers.PrimaryKeyRelatedField(
-        queryset=Reserve.objects.all()
-    )
+    reserve = serializers.IntegerField()
     status = serializers.CharField()
+
+    def validate_reserve(self, value):
+        user = self.context["request"].user
+        if value < 0:
+            raise serializers.ValidationError("Please enter positive value")
+        if not Reserve.objects.filter(pk=value, car__owner=user).exists():
+            raise serializers.ValidationError(
+                "Please enter your car reservation id.")
+        return value
 
     def validate_status(self, value):
         if value not in tuple(choice.value for choice in ReserveStatus):

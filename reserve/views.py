@@ -62,6 +62,8 @@ class ListReserveByCustomer(generics.ListAPIView):
 
 
 class ChangeReserveStatus(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
     def post(Self, request):
         serializer = ChangeReserveStatusSerializer(
             data=request.data, context={"request": request}
@@ -69,3 +71,7 @@ class ChangeReserveStatus(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(status=status.HTTP_200_OK)
+
+
+class PaymentReserve(APIView):
+    pass
