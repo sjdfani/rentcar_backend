@@ -5,7 +5,7 @@ from rest_framework import permissions
 from rest_framework import generics
 from .models import Reserve, ReserveStatus
 from .serializers import (
-    CreateReserveSerializer, ReserveSerializer,
+    CreateReserveSerializer, ReserveSerializer, ChangeReserveStatusSerializer,
 )
 
 
@@ -59,3 +59,13 @@ class ListReserveByCustomer(generics.ListAPIView):
                     user=self.request.user, status=ReserveStatus.REJECTED)
         else:
             return Reserve.objects.none()
+
+
+class ChangeReserveStatus(APIView):
+    def post(Self, request):
+        serializer = ChangeReserveStatusSerializer(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(status=status.HTTP_200_OK)

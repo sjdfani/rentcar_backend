@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (
-    CreateReserve, ListReserveCarOwner, ListReserveByCustomer,
+    CreateReserve, ListReserveCarOwner, ListReserveByCustomer, ChangeReserveStatus,
 )
 
 app_name = "reserve"
@@ -11,4 +11,5 @@ urlpatterns = [
          name="ListReserveCarOwner"),
     path("list/customer/<str:status>/", ListReserveByCustomer.as_view(),
          name="ListReserveByCustomer"),
+    path("status/", ChangeReserveStatus.as_view(), name="ChangeReserveStatus"),
 ]

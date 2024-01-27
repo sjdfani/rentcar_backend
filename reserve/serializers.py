@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Reserve
+from .models import Reserve, ReserveStatus
 from car.models import Car, RentalTerms
 from car.serializers import CarSerializer
 from users.serializers import UserSerializer
@@ -52,3 +52,25 @@ class CreateReserveSerializer(serializers.Serializer):
             with_insurance=with_insurance,
             insurance_price=insurance_price,
         )
+
+
+class ChangeReserveStatusSerializer(serializers.Serializer):
+    reserve = serializers.PrimaryKeyRelatedField(
+        queryset=Reserve.objects.all()
+    )
+    status = serializers.CharField()
+
+    def validate_status(self, value):
+        if value not in tuple(choice.value for choice in ReserveStatus):
+            raise serializers.ValidationError("Please choose right status.")
+        return value
+
+    def save(self, **kwargs):
+        reserve = self.validated_data["reserve"]
+        status = self.validated_data["status"]
+        if status == ReserveStatus.ACCEPTED:
+            reserve.change_status(ReserveStatus.ACCEPTED)
+        elif status == ReserveStatus.PENDING:
+            reserve.change_status(ReserveStatus.PENDING)
+        elif status == ReserveStatus.REJECTED:
+            reserve.change_status(ReserveStatus.REJECTED)
