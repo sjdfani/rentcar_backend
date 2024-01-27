@@ -2,8 +2,10 @@ from rest_framework.views import APIView
 from rest_framework .response import Response
 from rest_framework import status
 from rest_framework import permissions
+from rest_framework import generics
+from .models import Reserve, ReserveStatus
 from .serializers import (
-    CreateReserveSerializer,
+    CreateReserveSerializer, ReserveSerializer,
 )
 
 
@@ -17,3 +19,23 @@ class CreateReserve(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(status=status.HTTP_201_CREATED)
+
+
+class ListReserveCarOwner(generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = ReserveSerializer
+
+    def get_queryset(self):
+        status_ = self.kwargs.get("status", None)
+        if status_:
+            if status_ == ReserveStatus.ACCEPTED:
+                return Reserve.objects.filter(
+                    car__owner=self.request.user, status=ReserveStatus.ACCEPTED)
+            elif status_ == ReserveStatus.PENDING:
+                return Reserve.objects.filter(
+                    car__owner=self.request.user, status=ReserveStatus.PENDING)
+            elif status_ == ReserveStatus.REJECTED:
+                return Reserve.objects.filter(
+                    car__owner=self.request.user, status=ReserveStatus.REJECTED)
+        else:
+            return Reserve.objects.none()

@@ -1,6 +1,17 @@
 from rest_framework import serializers
 from .models import Reserve
 from car.models import Car, RentalTerms
+from car.serializers import CarSerializer
+from users.serializers import UserSerializer
+
+
+class ReserveSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    car = CarSerializer()
+
+    class Meta:
+        model = Reserve
+        fields = "__all__"
 
 
 class CreateReserveSerializer(serializers.Serializer):
