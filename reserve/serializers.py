@@ -104,3 +104,22 @@ class PaymentReserveSerializer(serializers.Serializer):
             tracking_payment=self.validated_data["tracking_payment"],
             bank_name=self.validated_data["bank_name"],
         )
+
+
+class FinishRentTimeSerializer(serializers.Serializer):
+    reserve = serializers.IntegerField()
+
+    def validate_reserve(self, value):
+        user = self.context["request"].user
+        if value < 0:
+            raise serializers.ValidationError("Please enter positive value")
+        if not Reserve.objects.filter(pk=value, car__owner=user).exists():
+            raise serializers.ValidationError(
+                "Please enter your car reservation id.")
+        return value
+
+    def save(self, **kwargs):
+        reserve = Reserve.objects.get(self.validated_data["reserve"])
+        car = Car.objects.get(pk=reserve.car.pk)
+        car.is_available = True
+        car.save()

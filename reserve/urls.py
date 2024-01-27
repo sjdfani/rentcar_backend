@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     CreateReserve, ListReserveCarOwner, ListReserveByCustomer, ChangeReserveStatus,
-    PaymentReserve,
+    PaymentReserve, FinishRentTime,
 )
 
 app_name = "reserve"
@@ -14,4 +14,5 @@ urlpatterns = [
          name="ListReserveByCustomer"),
     path("status/", ChangeReserveStatus.as_view(), name="ChangeReserveStatus"),
     path("payment/", PaymentReserve.as_view(), name="PaymentReserve"),
+    path("finish/", FinishRentTime.as_view(), name="FinishRentTime"),
 ]

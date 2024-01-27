@@ -6,7 +6,7 @@ from rest_framework import generics
 from .models import Reserve, ReserveStatus
 from .serializers import (
     CreateReserveSerializer, ReserveSerializer, ChangeReserveStatusSerializer,
-    PaymentReserveSerializer,
+    PaymentReserveSerializer, FinishRentTimeSerializer,
 )
 
 
@@ -77,6 +77,16 @@ class ChangeReserveStatus(APIView):
 class PaymentReserve(APIView):
     def post(self, request):
         serializer = PaymentReserveSerializer(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(status=status.HTTP_200_OK)
+
+
+class FinishRentTime(APIView):
+    def post(self, request):
+        serializer = FinishRentTimeSerializer(
             data=request.data, context={"request": request}
         )
         serializer.is_valid(raise_exception=True)
