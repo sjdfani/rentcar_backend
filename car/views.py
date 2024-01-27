@@ -1,5 +1,7 @@
 from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
+from django.db.models import Q
 from .models import (
     Manufacturer, CarModel, CarOptions, CarYear, Car, Color, CarStatus,
     Comment, RentalTerms,
@@ -56,13 +58,69 @@ class CreateCar(generics.CreateAPIView):
     queryset = Car.objects.all()
 
 
+class CarListPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+
 class CarList(generics.ListAPIView):
     permission_classes = (AllowAny,)
     serializer_class = CarSerializer
+    pagination_class = CarListPagination
 
     def get_queryset(self):
-        return Car.objects.filter(
-            status=CarStatus.ACCEPTED, is_out_of_service=False)
+        city = self.request.query_params.get('city')
+        min_days_to_rent = self.request.query_params.get('min_days_to_rent')
+
+        if not city or not min_days_to_rent:
+            return Car.objects.none()
+
+        rental_terms_objects = RentalTerms.objects.filter(
+            min_days_to_rent=min_days_to_rent)
+
+        rental_terms_filter = Q()
+        if self.request.query_params.get('with_driver'):
+            rental_terms_filter &= Q(with_driver=True)
+        else:
+            rental_terms_filter &= Q(with_driver=False)
+        if self.request.query_params.get('without_driver'):
+            rental_terms_filter &= Q(without_driver=True)
+        else:
+            rental_terms_filter &= Q(without_driver=False)
+        if self.request.query_params.get('deliver_at_renters_place'):
+            rental_terms_filter &= Q(deliver_at_renters_place=True)
+        else:
+            rental_terms_filter &= Q(deliver_at_renters_place=False)
+        min_price = self.request.query_params.get('min_price')
+        max_price = self.request.query_params.get('max_price')
+        if min_price is not None and max_price is not None:
+            rental_terms_filter &= Q(price_each_day__gte=min_price) & Q(
+                price_each_day__lte=max_price)
+
+        rental_terms_objects = rental_terms_objects.filter(rental_terms_filter)
+        car_ids = rental_terms_objects.values_list("car_object__id", flat=True)
+
+        queryset = Car.objects.filter(
+            id__in=car_ids,
+            city__name=city,
+            status=CarStatus.ACCEPTED,
+            is_out_of_service=False,
+            has_complete_info=True,
+            is_available=True
+        )
+
+        if self.request.query_params.get('body_style'):
+            queryset = queryset.filter(
+                car_template__Technical_specifications__body_style=self.request.query_params.get('body_style'))
+        if self.request.query_params.get('manufacturer'):
+            queryset = queryset.filter(
+                car_template__model__manufacturers__name=self.request.query_params.get('manufacturer'))
+        if self.request.query_params.get('model'):
+            queryset = queryset.filter(
+                car_template__model__name=self.request.query_params.get('model'))
+
+        return self.paginate_queryset(queryset)
 
 
 class RetrieveCar(generics.RetrieveAPIView):
