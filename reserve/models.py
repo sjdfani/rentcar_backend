@@ -62,7 +62,7 @@ class Reserve(models.Model):
         self.car.save()
         self.save()
 
-    def change_status(self, status: str):
+    def change_status(self, status: ReserveStatus):
         self.reserve_status = status
         self.date_of_change_status = timezone.now()
         self.save()
