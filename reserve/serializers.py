@@ -102,5 +102,5 @@ class PaymentReserveSerializer(serializers.Serializer):
         reserve = Reserve.objects.get(pk=self.validated_data["reserve"])
         reserve.payment_process(
             tracking_payment=self.validated_data["tracking_payment"],
-            bank_name=self.validated_data["tracking_payment"],
+            bank_name=self.validated_data["bank_name"],
         )
