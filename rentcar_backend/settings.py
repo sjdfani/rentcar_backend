@@ -55,6 +55,7 @@ LOCAL_APPS = [
     'car.apps.CarConfig',
     'city.apps.CityConfig',
     'panel.apps.PanelConfig',
+    'reserve.apps.ReserveConfig',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
