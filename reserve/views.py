@@ -39,3 +39,23 @@ class ListReserveCarOwner(generics.ListAPIView):
                     car__owner=self.request.user, status=ReserveStatus.REJECTED)
         else:
             return Reserve.objects.none()
+
+
+class ListReserveByCustomer(generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = ReserveSerializer
+
+    def get_queryset(self):
+        status_ = self.kwargs.get("status", None)
+        if status_:
+            if status_ == ReserveStatus.ACCEPTED:
+                return Reserve.objects.filter(
+                    user=self.request.user, status=ReserveStatus.ACCEPTED)
+            elif status_ == ReserveStatus.PENDING:
+                return Reserve.objects.filter(
+                    user=self.request.user, status=ReserveStatus.PENDING)
+            elif status_ == ReserveStatus.REJECTED:
+                return Reserve.objects.filter(
+                    user=self.request.user, status=ReserveStatus.REJECTED)
+        else:
+            return Reserve.objects.none()
