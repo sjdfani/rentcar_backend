@@ -207,7 +207,7 @@ class RentalTerms(BaseModel):
     without_driver = models.BooleanField(
         verbose_name=_("Without_Driver"), default=False)
     price_each_day = models.PositiveBigIntegerField(
-        verbose_name=_("Price Each Day"), default=False)
+        verbose_name=_("Price Each Day"), default=0)
 
     def __str__(self) -> str:
         return self.car_object.owner.email
