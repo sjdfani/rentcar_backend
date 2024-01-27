@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from users.models import CustomUser
-from car.models import BaseModel, Car
+from car.models import Car
 
 
 class ReserveStatus(models.TextChoices):
