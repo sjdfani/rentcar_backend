@@ -6,6 +6,7 @@ from rest_framework import generics
 from .models import Reserve, ReserveStatus
 from .serializers import (
     CreateReserveSerializer, ReserveSerializer, ChangeReserveStatusSerializer,
+    PaymentReserveSerializer,
 )
 
 
@@ -74,4 +75,10 @@ class ChangeReserveStatus(APIView):
 
 
 class PaymentReserve(APIView):
-    pass
+    def post(self, request):
+        serializer = PaymentReserveSerializer(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(status=status.HTTP_200_OK)

@@ -81,3 +81,26 @@ class ChangeReserveStatusSerializer(serializers.Serializer):
             reserve.change_status(ReserveStatus.PENDING)
         elif status == ReserveStatus.REJECTED:
             reserve.change_status(ReserveStatus.REJECTED)
+
+
+class PaymentReserveSerializer(serializers.Serializer):
+    reserve = serializers.IntegerField()
+    tracking_payment = serializers.CharField()
+    bank_name = serializers.CharField()
+
+    def validate_reserve(self, value):
+        user = self.context["request"].user
+        if value < 0:
+            raise serializers.ValidationError("Please enter positive value.")
+        if not Reserve.objects.filter(
+                pk=value, user=user, status=ReserveStatus.ACCEPTED).exists():
+            raise serializers.ValidationError(
+                "Please enter your car reservation id.")
+        return value
+
+    def save(self, **kwargs):
+        reserve = Reserve.objects.get(pk=self.validated_data["reserve"])
+        reserve.payment_process(
+            tracking_payment=self.validated_data["tracking_payment"],
+            bank_name=self.validated_data["tracking_payment"],
+        )
