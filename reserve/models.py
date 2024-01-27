@@ -35,6 +35,8 @@ class Reserve(models.Model):
         max_length=10, verbose_name=_("Reserver_Status"),
         choices=ReserveStatus.choices, default=ReserveStatus.PENDING
     )
+    date_of_change_status = models.DateField(
+        verbose_name=_("Date of Change Status"), null=True, blank=True)
     created_at = models.DateTimeField(
         verbose_name=_("Created_at"), auto_now_add=True)
     updated_at = models.DateTimeField(
@@ -58,4 +60,9 @@ class Reserve(models.Model):
         self.payment_status = True
         self.car.is_available = False
         self.car.save()
+        self.save()
+
+    def change_status(self, status: str):
+        self.reserve_status = status
+        self.date_of_change_status = timezone.now()
         self.save()
