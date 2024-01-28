@@ -2,6 +2,8 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
+from reserve.models import Reserve, ReserveStatus
+from reserve.serializers import ReserveSerializer
 from users.permissions import IsSuperuser
 from car.models import (
     Manufacturer, CarModel, Category, CarOptions, CarYear, CarTemplate, Car,
@@ -13,6 +15,7 @@ from car.serializers import (
     CarTemplateSerializer, ColorSerializer, CarSerializer,  CommentSerializer,
     CreateCarModelSerializer, UpdateCarTemplateSerializer,
 )
+from .serializers import UpdateReserveSerializer
 
 
 class CreateManufacturer(generics.CreateAPIView):
@@ -176,3 +179,30 @@ class CarList(generics.ListAPIView):
     permission_classes = (IsSuperuser,)
     serializer_class = CarSerializer
     queryset = Car.objects.all()
+
+
+class ListReserveCar(generics.ListAPIView):
+    permission_classes = (IsSuperuser,)
+    serializer_class = ReserveSerializer
+
+    def get_queryset(self):
+        status_ = self.kwargs.get("status", None)
+        if status_:
+            if status_ == ReserveStatus.ACCEPTED:
+                return Reserve.objects.filter(status=ReserveStatus.ACCEPTED)
+            elif status_ == ReserveStatus.PENDING:
+                return Reserve.objects.filter(status=ReserveStatus.PENDING)
+            elif status_ == ReserveStatus.REJECTED:
+                return Reserve.objects.filter(status=ReserveStatus.REJECTED)
+        else:
+            return Reserve.objects.none()
+
+
+class UpdateDestroyReserverCar(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsSuperuser,)
+    queryset = Reserve.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return ReserveSerializer
+        return UpdateReserveSerializer

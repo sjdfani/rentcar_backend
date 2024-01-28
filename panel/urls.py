@@ -1,13 +1,13 @@
 from django.urls import path
 from .views import (
-    CreateManufacturer,  RetrieveUpdateDestroyManufacturer,
+    CreateManufacturer, ListReserveCar,  RetrieveUpdateDestroyManufacturer,
     CreateCarModel,  RetrieveUpdateDestroyCarModel, CreateCategory,
     RetrieveUpdateDestroyCategory, CategoryList, AllCarModelList,
     RetrieveUpdateDestroyCarOptions, CreateCarOptions, CreateCarYear,
     RetrieveUpdateDestroyCarYear, CreateCarTemplate, CarTemplateList,
     RetrieveUpdateDestroyCarTemplate, CreateColor, RetrieveUpdateDestroyColor,
     CommentList, RetrieveDestroyComment,  GetCarByStatus, CarOptionsList,
-    CarYearList, ColorList, CarList,
+    CarYearList, ColorList, CarList, UpdateDestroyReserverCar
 )
 
 app_name = "panel"
@@ -69,4 +69,9 @@ urlpatterns = [
          name="GetCarByStatus"),
     path("car/all/list/", CarList.as_view(),
          name="CarList"),
+
+    path("reserve/list/<str:status>/", ListReserveCar.as_view(),
+         name="ListReserveCar"),
+    path("reserve/all/list/<int:pk>/", UpdateDestroyReserverCar.as_view(),
+         name="UpdateDestroyReserverCar"),
 ]
