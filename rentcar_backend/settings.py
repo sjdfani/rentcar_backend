@@ -56,6 +56,7 @@ LOCAL_APPS = [
     'city.apps.CityConfig',
     'panel.apps.PanelConfig',
     'reserve.apps.ReserveConfig',
+    'wallet.apps.WalletConfig',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
