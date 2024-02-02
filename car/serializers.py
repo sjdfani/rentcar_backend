@@ -142,6 +142,15 @@ class CarSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class UpdateCarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Car
+        fields = (
+            "color", "city", "year", "description",
+            "car_value", "mileage", "is_out_of_service",
+        )
+
+
 class CreateCarSerializer(serializers.Serializer):
     model = serializers.PrimaryKeyRelatedField(
         queryset=CarModel.objects.all()

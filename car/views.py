@@ -13,7 +13,7 @@ from .serializers import (
     ManufacturerSerializer, CarModelSerializer, CarOptionsSerializer,
     CarYearSerializer, CreateCarSerializer, ColorSerializer, CarSerializer,
     CreateCommentSerializer, CreateRentalTermsSerializer,
-    UpdateRentalTermsSerializer,
+    UpdateRentalTermsSerializer, UpdateCarSerializer,
 )
 
 
@@ -135,12 +135,16 @@ class RetrieveCar(generics.RetrieveAPIView):
 
     def get_queryset(self):
         return Car.objects.filter(
-            status=CarStatus.ACCEPTED, is_out_of_service=False)
+            status=CarStatus.ACCEPTED, is_out_of_service=False, is_available=True)
 
 
 class RetrieveUpdateDestroyCar(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = CarSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return CarSerializer
+        return UpdateCarSerializer
 
     def get_queryset(self):
         return Car.objects.filter(owner=self.request.user)
