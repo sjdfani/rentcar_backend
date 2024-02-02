@@ -29,7 +29,8 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ("email", "username", "first_name", "last_name", "photo")
+        fields = (
+            "email", "username", "first_name", "last_name", "photo", "phone_number")
 
 
 class LoginSerializer(serializers.Serializer):
