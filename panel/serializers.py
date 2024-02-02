@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from reserve.models import Reserve
+from django.utils import timezone
 
 
 class UpdateReserveSerializer(serializers.ModelSerializer):
@@ -7,6 +8,11 @@ class UpdateReserveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reserve
         exclude = (
-            "user", "car", "reserve_status", "updated_at",
-            "date_of_change_status", "created_at",
-        )
+            "user", "car", "updated_at", "date_of_change_status", "created_at")
+
+    def update(self, instance, validated_data):
+        result = super().update(instance, validated_data)
+        if validated_data.get("reserve_status", None):
+            instance.date_of_change_status = timezone.now()
+            instance.save()
+        return result
