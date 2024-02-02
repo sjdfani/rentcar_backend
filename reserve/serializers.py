@@ -3,7 +3,7 @@ from .models import Reserve, ReserveStatus
 from car.models import Car, RentalTerms
 from car.serializers import CarSerializer
 from users.serializers import UserSerializer
-from wallet.models import Deposit
+from wallet.models import Deposit, Wallet
 from panel.models import BasicPaymentInformation
 
 
@@ -31,7 +31,6 @@ class CreateReserveSerializer(serializers.Serializer):
         insurance_price = 0
         if with_insurance:
             insurance_price = obj.insurance_percentage * rental_terms.car_object.car_value
-            with_insurance = True
         value_added = obj.value_added_percentage * \
             rental_terms.price_each_day * rental_terms.min_days_to_rent
         return Reserve.objects.create(
@@ -91,13 +90,26 @@ class PaymentReserveSerializer(serializers.Serializer):
         return value
 
     def save(self, **kwargs):
-        # fix payment (added_value, insurance_price, price_each_day*min_days_to_rent)
-        # call Deposit model and create a deposit object with (price_each_day * min_days_to_rent)
+        user = self.context["request"].user
+        obj = BasicPaymentInformation.objects.order_by("-pk").first()
         reserve = Reserve.objects.get(pk=self.validated_data["reserve"])
         reserve.payment_process(
             tracking_payment=self.validated_data["tracking_payment"],
             bank_name=self.validated_data["bank_name"],
         )
+        Deposit.objects.create(
+            reserve=reserve,
+            rent_price=reserve.price_each_day * reserve.min_days_to_rent,
+            car_value=reserve.car.car_value,
+            company_percentage=obj.company_percentage,
+            value_added_percentage=obj.value_added_percentage,
+            insurance_percentage=obj.insurance_percentage,
+        )
+        total_price_rent = reserve.min_days_to_rent * reserve.price_each_day
+        user_share_price = total_price_rent - \
+            (total_price_rent * obj.company_percentage)
+        wallet = Wallet.objects.get(user=user)
+        wallet.deposit_process(user_share_price)
 
 
 class FinishRentTimeSerializer(serializers.Serializer):
