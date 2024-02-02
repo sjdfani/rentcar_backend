@@ -42,3 +42,9 @@ class DoneWithdrawalSerializer(serializers.Serializer):
         obj.tracking_payment = self.validated_data["tracking_payment"]
         obj.date_of_withdrawal = timezone.now()
         obj.save()
+
+
+class DepositSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Deposit
+        fields = "__all__"

@@ -2,10 +2,11 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .models import Wallet
+from rest_framework import generics
+from .models import Wallet, withdrawal, Deposit
 from .serializers import (
     WalletSerializer, WithdrawalRequestSerializer, WithdrawalSerializer,
-    DoneWithdrawalSerializer,
+    DoneWithdrawalSerializer, DepositSerializer,
 )
 
 
@@ -40,3 +41,27 @@ class DoneWithdrawal(APIView):
         )
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class WithdrawalList(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = WithdrawalSerializer
+
+    def get_queryset(self):
+        return withdrawal.objects.filter(wallet__user=self.request.user)
+
+
+class DepositListByOwner(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = DepositSerializer
+
+    def get_queryset(self):
+        return Deposit.objects.filter(reserve__owner=self.request.user)
+
+
+class DepositListByUser(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = DepositSerializer
+
+    def get_queryset(self):
+        return Deposit.objects.filter(reserve__user=self.request.user)
