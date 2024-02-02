@@ -11,11 +11,13 @@ class CustomUser(AbstractUser):
     email = models.EmailField(_("Email address"), unique=True)
     photo = models.ImageField(
         upload_to="users/photo/", verbose_name=_("Photo"), null=True, blank=True)
+    phone_number = models.CharField(
+        _("Phone Number"), max_length=20, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'phone_number']
 
     objects = CustomUserManager()
 
