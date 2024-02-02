@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Wallet
 from .serializers import (
     WalletSerializer, WithdrawalRequestSerializer, WithdrawalSerializer,
+    DoneWithdrawalSerializer,
 )
 
 
@@ -28,3 +29,14 @@ class WithdrawalRequest(APIView):
         data = WithdrawalSerializer(
             serializer.withdrawal_request()).data
         return Response(data, status=status.HTTP_201_CREATED)
+
+
+class DoneWithdrawal(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        serializer = DoneWithdrawalSerializer(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
