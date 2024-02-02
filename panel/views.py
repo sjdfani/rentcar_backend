@@ -181,6 +181,12 @@ class CarList(generics.ListAPIView):
     queryset = Car.objects.all()
 
 
+class RetrieveUpdateDestroyCar(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsSuperuser,)
+    serializer_class = CarSerializer
+    queryset = Car.objects.all()
+
+
 class ListReserveCar(generics.ListAPIView):
     permission_classes = (IsSuperuser,)
     serializer_class = ReserveSerializer

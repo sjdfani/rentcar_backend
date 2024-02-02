@@ -99,6 +99,8 @@ class PaymentReserveSerializer(serializers.Serializer):
         return value
 
     def save(self, **kwargs):
+        # fix payment (added_value, insurance_price, price_each_day*min_days_to_rent)
+        # call Deposit model and create a deposit object with (price_each_day * min_days_to_rent)
         reserve = Reserve.objects.get(pk=self.validated_data["reserve"])
         reserve.payment_process(
             tracking_payment=self.validated_data["tracking_payment"],

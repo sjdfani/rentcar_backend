@@ -7,7 +7,7 @@ from .views import (
     RetrieveUpdateDestroyCarYear, CreateCarTemplate, CarTemplateList,
     RetrieveUpdateDestroyCarTemplate, CreateColor, RetrieveUpdateDestroyColor,
     CommentList, RetrieveDestroyComment,  GetCarByStatus, CarOptionsList,
-    CarYearList, ColorList, CarList, UpdateDestroyReserverCar
+    CarYearList, ColorList, CarList, UpdateDestroyReserverCar, RetrieveUpdateDestroyCar,
 )
 
 app_name = "panel"
@@ -69,6 +69,8 @@ urlpatterns = [
          name="GetCarByStatus"),
     path("car/all/list/", CarList.as_view(),
          name="CarList"),
+    path("car/all/list/<int:pk>/", RetrieveUpdateDestroyCar.as_view(),
+         name="RetrieveUpdateDestroyCar"),
 
     path("reserve/list/<str:status>/", ListReserveCar.as_view(),
          name="ListReserveCar"),
