@@ -23,6 +23,14 @@ class Wallet(models.Model):
     def __str__(self) -> str:
         return self.user.email
 
+    def deposit_process(self, price: int):
+        self.balance += price
+        self.save()
+
+    def withdrawal_process(self):
+        self.balance = 0
+        self.save()
+
 
 class withdrawal(models.Model):
     wallet = models.ForeignKey(
