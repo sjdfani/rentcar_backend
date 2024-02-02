@@ -147,13 +147,13 @@ class CreateCarSerializer(serializers.Serializer):
         queryset=CarModel.objects.all()
     )
     year = serializers.PrimaryKeyRelatedField(
-        queryset=CarYear.objects.all()
+        queryset=CarYear.objects.filter(status=True)
     )
     color = serializers.PrimaryKeyRelatedField(
-        queryset=Color.objects.all()
+        queryset=Color.objects.filter(status=True)
     )
     city = serializers.PrimaryKeyRelatedField(
-        queryset=City.objects.all()
+        queryset=City.objects.filter(status=True)
     )
     plate = serializers.CharField()
     car_value = serializers.IntegerField()
@@ -170,7 +170,7 @@ class CreateCarSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         request = self.context["request"]
-        car_options = validated_data.pop("car_options")
+        car_options = validated_data.pop("car_option")
         model = validated_data.pop("model")
         car_template = CarTemplate.objects.get(model=model)
         obj = Car.objects.create(

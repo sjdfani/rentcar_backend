@@ -1,6 +1,9 @@
 from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from django.db.models import Q
 from .models import (
     Manufacturer, CarModel, CarOptions, CarYear, Car, Color, CarStatus,
@@ -12,9 +15,6 @@ from .serializers import (
     CreateCommentSerializer, CreateRentalTermsSerializer,
     UpdateRentalTermsSerializer,
 )
-
-# Fix CarList -> date range
-# change queryset of CarList
 
 
 class ManufacturerList(generics.ListAPIView):
@@ -52,10 +52,16 @@ class ColorList(generics.ListAPIView):
     queryset = Color.objects.filter(status=True)
 
 
-class CreateCar(generics.CreateAPIView):
+class CreateCar(APIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = CreateCarSerializer
-    queryset = Car.objects.all()
+
+    def post(self, request):
+        serializer = CreateCarSerializer(
+            data=request.data, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class CarListPagination(PageNumberPagination):
