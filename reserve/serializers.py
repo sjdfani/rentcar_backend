@@ -25,20 +25,22 @@ class CreateReserveSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         user = self.context["request"].user
+        obj = BasicPaymentInformation.objects.order_by("-pk").first()
         rental_terms = RentalTerms.objects.get(pk=validated_data["car"].pk)
         with_insurance = self.validated_data["with_insurance"]
         insurance_price = 0
         if with_insurance:
-            obj = BasicPaymentInformation.objects.order_by("-pk").first()
-            insurance_price = obj.insurance_percentage*rental_terms.car_object.car_value
+            insurance_price = obj.insurance_percentage * rental_terms.car_object.car_value
             with_insurance = True
+        value_added = obj.value_added_percentage * \
+            rental_terms.price_each_day * rental_terms.min_days_to_rent
         return Reserve.objects.create(
             user=user,
             car=validated_data["car"],
             start_rent_date=validated_data["start_rent_date"],
             min_days_to_rent=rental_terms.min_days_to_rent,
             price_each_day=rental_terms.price_each_day,
-            value_added=validated_data["value_added"],
+            value_added=value_added,
             with_insurance=with_insurance,
             insurance_price=insurance_price,
         )
