@@ -8,8 +8,8 @@ from .views import (
     RetrieveUpdateDestroyCarTemplate, CreateColor, RetrieveUpdateDestroyColor,
     CommentList, RetrieveDestroyComment,  GetCarByStatus, CarOptionsList,
     CarYearList, ColorList, CarList, UpdateDestroyReserverCar, RetrieveUpdateDestroyCar,
-    CreateBasicPaymentInformation, BasicPaymentInformationList,
-    RetrieveUpdateDestroyBasicPaymentInformation,
+    CreateBasicPaymentInformation, BasicPaymentInformationList, WalletList,
+    RetrieveUpdateDestroyBasicPaymentInformation, WithdrawalList, DepositList
 )
 
 app_name = "panel"
@@ -86,4 +86,8 @@ urlpatterns = [
     path("basic-payment-info/list/<int:pk>/",
          RetrieveUpdateDestroyBasicPaymentInformation.as_view(),
          name="CreateBasicPaymentInformation"),
+
+    path("withdrawal/list/", WithdrawalList.as_view(), name="WithdrawalList"),
+    path("deposit/list/", DepositList.as_view(), name="DepositList"),
+    path("wallet/list/", WalletList.as_view(), name="WalletList"),
 ]

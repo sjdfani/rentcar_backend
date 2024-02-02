@@ -17,6 +17,8 @@ from car.serializers import (
 )
 from .serializers import UpdateReserveSerializer, BasicPaymentInformationSerializer
 from .models import BasicPaymentInformation
+from wallet.models import withdrawal, Deposit, Wallet
+from wallet.serializers import WithdrawalSerializer, DepositSerializer, WalletSerializer
 
 
 class CreateManufacturer(generics.CreateAPIView):
@@ -231,3 +233,21 @@ class RetrieveUpdateDestroyBasicPaymentInformation(generics.RetrieveUpdateDestro
     permission_classes = (IsSuperuser,)
     serializer_class = BasicPaymentInformationSerializer
     queryset = BasicPaymentInformation.objects.all()
+
+
+class WithdrawalList(generics.ListAPIView):
+    permission_classes = (IsSuperuser,)
+    serializer_class = WithdrawalSerializer
+    queryset = withdrawal.objects.all()
+
+
+class DepositList(generics.ListAPIView):
+    permission_classes = (IsSuperuser,)
+    serializer_class = DepositSerializer
+    queryset = Deposit.objects.all()
+
+
+class WalletList(generics.ListAPIView):
+    permission_classes = (IsSuperuser,)
+    serializer_class = WalletSerializer
+    queryset = Wallet.objects.all()
