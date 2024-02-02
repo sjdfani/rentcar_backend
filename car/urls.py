@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     ManufacturerList, CarModelList, CarOptionsList, CarYearList, RetrieveCar,
     CreateCar, CarList, RetrieveUpdateDestroyCar, ColorList, CreateComment,
-    CreateRentalTerms,  UpdateRentalTerms,
+    CreateRentalTerms,  UpdateRentalTerms, CarListByOwner,
 )
 
 app_name = "car"
@@ -35,6 +35,7 @@ urlpatterns = [
          name="RetrieveCar"),
     path("list/<int:pk>/", RetrieveUpdateDestroyCar.as_view(),
          name="RetrieveUpdateDestroyCar"),
+    path("list/owner/", CarListByOwner.as_view(), name="CarListByOwner"),
 
     path("rentalTerms/create/", CreateRentalTerms.as_view(),
          name="UpdateRentalTerms"),

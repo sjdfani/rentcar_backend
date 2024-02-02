@@ -150,6 +150,14 @@ class RetrieveUpdateDestroyCar(generics.RetrieveUpdateDestroyAPIView):
         return Car.objects.filter(owner=self.request.user)
 
 
+class CarListByOwner(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CarSerializer
+
+    def get_queryset(self):
+        return Car.objects.filter(owner=self.request.user)
+
+
 class CreateComment(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = CreateCommentSerializer
