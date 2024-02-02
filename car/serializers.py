@@ -3,8 +3,8 @@ from .models import (
     Manufacturer, CarModel, Category, CarOptions, CarYear, CarTemplate,
     TechnicalSpecifications, Car, Color, City, CarImage, Comment, RentalTerms,
 )
-
-# add related serializers to CarSerializer
+from users.serializers import UserSerializer
+from city.serializers import CitySerializer
 
 
 class ManufacturerSerializer(serializers.ModelSerializer):
@@ -137,6 +137,13 @@ class ColorSerializer(serializers.ModelSerializer):
 
 
 class CarSerializer(serializers.ModelSerializer):
+    owner = UserSerializer(read_only=True)
+    car_template = CarTemplateSerializer(read_only=True)
+    city = CitySerializer(read_only=True)
+    color = ColorSerializer(read_only=True)
+    year = CarYearSerializer(read_only=True)
+    car_option = CarOptionsSerializer(many=True)
+
     class Meta:
         model = Car
         fields = "__all__"
