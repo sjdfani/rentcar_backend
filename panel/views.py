@@ -15,7 +15,8 @@ from car.serializers import (
     CarTemplateSerializer, ColorSerializer, CarSerializer,  CommentSerializer,
     CreateCarModelSerializer, UpdateCarTemplateSerializer,
 )
-from .serializers import UpdateReserveSerializer
+from .serializers import UpdateReserveSerializer, BasicPaymentInformationSerializer
+from .models import BasicPaymentInformation
 
 
 class CreateManufacturer(generics.CreateAPIView):
@@ -212,3 +213,21 @@ class UpdateDestroyReserverCar(generics.RetrieveUpdateDestroyAPIView):
         if self.request.method == "GET":
             return ReserveSerializer
         return UpdateReserveSerializer
+
+
+class CreateBasicPaymentInformation(generics.CreateAPIView):
+    permission_classes = (IsSuperuser,)
+    serializer_class = BasicPaymentInformationSerializer
+    queryset = BasicPaymentInformation.objects.all()
+
+
+class BasicPaymentInformationList(generics.ListAPIView):
+    permission_classes = (IsSuperuser,)
+    serializer_class = BasicPaymentInformationSerializer
+    queryset = BasicPaymentInformation.objects.all()
+
+
+class RetrieveUpdateDestroyBasicPaymentInformation(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsSuperuser,)
+    serializer_class = BasicPaymentInformationSerializer
+    queryset = BasicPaymentInformation.objects.all()

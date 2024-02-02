@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from reserve.models import Reserve
 from django.utils import timezone
+from .models import BasicPaymentInformation
 
 
 class UpdateReserveSerializer(serializers.ModelSerializer):
@@ -16,3 +17,9 @@ class UpdateReserveSerializer(serializers.ModelSerializer):
             instance.date_of_change_status = timezone.now()
             instance.save()
         return result
+
+
+class BasicPaymentInformationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BasicPaymentInformation
+        fields = "__all__"
