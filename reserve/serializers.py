@@ -3,6 +3,8 @@ from .models import Reserve, ReserveStatus
 from car.models import Car, RentalTerms
 from car.serializers import CarSerializer
 from users.serializers import UserSerializer
+from wallet.models import Deposit
+from panel.models import BasicPaymentInformation
 
 
 class ReserveSerializer(serializers.ModelSerializer):
@@ -19,29 +21,17 @@ class CreateReserveSerializer(serializers.Serializer):
         queryset=Car.objects.filter(is_available=True, is_out_of_service=False)
     )
     start_rent_date = serializers.DateField()
-    value_added = serializers.IntegerField()
-    insurance_price = serializers.IntegerField(required=False)
-
-    def validate_value_added(self, value):
-        if value < 0:
-            raise serializers.ValidationError(
-                "You can't enter negative price.")
-        return value
-
-    def validate_insurance_price(self, value):
-        if value < 0:
-            raise serializers.ValidationError(
-                "You can't enter negative price.")
-        return value
+    with_insurance = serializers.BooleanField()
 
     def create(self, validated_data):
         user = self.context["request"].user
         rental_terms = RentalTerms.objects.get(pk=validated_data["car"].pk)
-        with_insurance = True
-        insurance_price = validated_data.get("insurance_price", None)
-        if not insurance_price:
-            insurance_price = 0
-            with_insurance = False
+        with_insurance = self.validated_data["with_insurance"]
+        insurance_price = 0
+        if with_insurance:
+            obj = BasicPaymentInformation.objects.order_by("-pk").first()
+            insurance_price = obj.insurance_percentage*rental_terms.car_object.car_value
+            with_insurance = True
         return Reserve.objects.create(
             user=user,
             car=validated_data["car"],
