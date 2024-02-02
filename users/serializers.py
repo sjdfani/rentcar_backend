@@ -3,6 +3,7 @@ from rest_framework.validators import ValidationError
 from .models import CustomUser, EmailCode
 from .utils import str_generator, get_user_messages
 from .tasks import send_email
+from wallet.models import Wallet
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -69,6 +70,7 @@ class RegisterSerializer(serializers.Serializer):
         user = CustomUser.objects.create(**validated_data)
         user.set_password(password)
         user.save()
+        Wallet.objects.create(user=user)
         return user
 
 
