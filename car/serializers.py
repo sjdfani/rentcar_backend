@@ -43,6 +43,11 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = "__all__"
 
+    def validate_name(self, value):
+        if Category.objects.filter(name=value).exists():
+            raise serializers.ValidationError("This category is exists.")
+        return value
+
 
 class CarOptionsSerializer(serializers.ModelSerializer):
     class Meta:
