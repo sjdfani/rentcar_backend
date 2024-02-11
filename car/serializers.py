@@ -155,6 +155,11 @@ class ColorSerializer(serializers.ModelSerializer):
         model = Color
         fields = "__all__"
 
+    def validate_name(self, value):
+        if Color.objects.filter(name=value).exists():
+            raise serializers.ValidationError("This color is exists.")
+        return value
+
 
 class CarSerializer(serializers.ModelSerializer):
     owner = UserSerializer(read_only=True)
