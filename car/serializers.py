@@ -54,6 +54,11 @@ class CarOptionsSerializer(serializers.ModelSerializer):
         model = CarOptions
         fields = "__all__"
 
+    def validate_name(self, value):
+        if CarOptions.objects.filter(name=value).exists():
+            raise serializers.ValidationError("This Car option is exists.")
+        return value
+
 
 class CarYearSerializer(serializers.ModelSerializer):
     class Meta:
