@@ -161,6 +161,12 @@ class ColorSerializer(serializers.ModelSerializer):
         return value
 
 
+class RentalTermsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RentalTerms
+        fields = "__all__"
+
+
 class CarSerializer(serializers.ModelSerializer):
     owner = UserSerializer(read_only=True)
     car_template = CarTemplateSerializer(read_only=True)
@@ -172,6 +178,12 @@ class CarSerializer(serializers.ModelSerializer):
     class Meta:
         model = Car
         fields = "__all__"
+
+    def to_representation(self, instance):
+        res = super().to_representation(instance)
+        obj = RentalTerms.objects.filter(car_object__pk=instance.pk).first()
+        res["rental_terms"] = RentalTermsSerializer(obj).data
+        return res
 
 
 class UpdateCarSerializer(serializers.ModelSerializer):
@@ -227,7 +239,10 @@ class CreateCarSerializer(serializers.Serializer):
             status = True
         obj.change_has_media(
             True) if status is True else obj.change_has_media(False)
-        return obj
+        return {"id": obj.pk, "car_template": obj.car_template.pk}
+
+    def save(self, **kwargs):
+        return self.create(self.validated_data)
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -272,10 +287,9 @@ class CreateRentalTermsSerializer(serializers.Serializer):
         return value
 
     def create(self, validated_data):
-        create_process = super().create(validated_data)
-        car_object = validated_data["car_object"]
-        car_object.change_has_complete_info(True)
-        return create_process
+        obj = RentalTerms.objects.create(**validated_data)
+        obj.car_object.change_has_complete_info(True)
+        return obj
 
 
 class UpdateRentalTermsSerializer(serializers.ModelSerializer):
