@@ -92,7 +92,7 @@ class CarTemplate(BaseModel):
     category = models.ManyToManyField(Category, verbose_name=_("Category"))
 
     def __str__(self) -> str:
-        return f"{self.model.manufacturers.name - self.model.name}"
+        return f"{self.model.manufacturers.name} - {self.model.name}"
 
 
 class CarYear(BaseModel):
