@@ -12,6 +12,11 @@ class ManufacturerSerializer(serializers.ModelSerializer):
         model = Manufacturer
         fields = "__all__"
 
+    def validate_name(self, value):
+        if Manufacturer.objects.filter(name=value).exists():
+            raise serializers.ValidationError("This manufacturer is exists.")
+        return value
+
 
 class CarModelSerializer(serializers.ModelSerializer):
     manufacturers = ManufacturerSerializer(read_only=True)
