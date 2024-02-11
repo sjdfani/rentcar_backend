@@ -3,7 +3,7 @@ from .models import City
 
 
 class CityAdmin(admin.ModelAdmin):
-    list_display = ("name", "status")
+    list_display = ("name", "status", "id")
     list_filter = ("status",)
 
 
