@@ -65,6 +65,11 @@ class CarYearSerializer(serializers.ModelSerializer):
         model = CarYear
         fields = "__all__"
 
+    def validate_name(self, value):
+        if CarYear.objects.filter(name=value).exists():
+            raise serializers.ValidationError("This Car year is exists.")
+        return value
+
 
 class TechnicalSpecificationsSerializer(serializers.ModelSerializer):
     class Meta:
