@@ -57,6 +57,7 @@ LOCAL_APPS = [
     'panel.apps.PanelConfig',
     'reserve.apps.ReserveConfig',
     'wallet.apps.WalletConfig',
+    'reports.apps.ReportsConfig',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

@@ -33,6 +33,7 @@ urlpatterns = [
     path('api/v1/panel/', include('panel.urls'), name='panel'),
     path('api/v1/reserve/', include('reserve.urls'), name='reserve'),
     path('api/v1/wallet/', include('wallet.urls'), name='wallet'),
+    path('api/v1/reports/', include('reports.urls'), name='reports'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
