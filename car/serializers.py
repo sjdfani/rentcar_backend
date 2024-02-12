@@ -78,7 +78,9 @@ class TechnicalSpecificationsSerializer(serializers.ModelSerializer):
 
 
 class CarTemplateSerializer(serializers.ModelSerializer):
+    model = CarModelSerializer(read_only=True)
     Technical_specifications = TechnicalSpecificationsSerializer()
+    category = CategorySerializer(many=True)
 
     class Meta:
         model = CarTemplate
