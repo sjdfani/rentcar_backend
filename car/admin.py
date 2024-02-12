@@ -27,7 +27,7 @@ class ColorAdmin(admin.ModelAdmin):
 
 
 class CarAdmin(admin.ModelAdmin):
-    list_display = ("owner", "status", "id")
+    list_display = ("owner", "status", "id", "created_at")
     list_editable = ("status",)
 
 
