@@ -28,8 +28,7 @@ urlpatterns = [
 
     path("create/", CreateCar.as_view(),
          name="CreateCar"),
-    path("<str:city>/<int:min_days_to_rent>/list/",
-         CarList.as_view(), name="car_list"),
+    path("list/", CarList.as_view(), name="car_list"),
 
     path("retrieve/<int:pk>/", RetrieveCar.as_view(),
          name="RetrieveCar"),

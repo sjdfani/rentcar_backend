@@ -77,13 +77,11 @@ class CarList(generics.ListAPIView):
 
     def get_queryset(self):
         city = self.request.query_params.get('city')
-        min_days_to_rent = self.request.query_params.get('min_days_to_rent')
 
-        if not city or not min_days_to_rent:
+        if not city:
             return Car.objects.none()
 
-        rental_terms_objects = RentalTerms.objects.filter(
-            min_days_to_rent=min_days_to_rent)
+        rental_terms_objects = RentalTerms.objects.all()
 
         rental_terms_filter = Q()
         if self.request.query_params.get('with_driver'):
