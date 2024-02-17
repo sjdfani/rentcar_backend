@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     ReportByProduct, ReportByCategory, ReportByIsAvailable, ReportByBodyStyle,
-    ReportByUserWithAcceptedCar, ReportUsersSerializer, ReportUsersAtLeastReserveCar,
+    ReportByUserWithAcceptedCar, ReportByUser, ReportUsersAtLeastReserveCar,
 )
 
 app_name = "reports"
@@ -18,7 +18,7 @@ urlpatterns = [
 
     path("by/users/car/accepted/", ReportByUserWithAcceptedCar.as_view(),
          name="ReportByUserWithAcceptedCar"),
-    path("by/users/registered/", ReportUsersSerializer.as_view(),
+    path("by/users/registered/", ReportByUser.as_view(),
          name="ReportUsersSerializer"),
     path("by/users/reserved/", ReportUsersAtLeastReserveCar.as_view(),
          name="ReportUsersAtLeastReserveCar"),
