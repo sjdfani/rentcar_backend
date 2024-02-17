@@ -84,18 +84,26 @@ class CarList(generics.ListAPIView):
         rental_terms_objects = RentalTerms.objects.all()
 
         rental_terms_filter = Q()
-        if self.request.query_params.get('with_driver'):
-            rental_terms_filter &= Q(with_driver=True)
-        else:
-            rental_terms_filter &= Q(with_driver=False)
-        if self.request.query_params.get('without_driver'):
-            rental_terms_filter &= Q(without_driver=True)
-        else:
-            rental_terms_filter &= Q(without_driver=False)
-        if self.request.query_params.get('deliver_at_renters_place'):
-            rental_terms_filter &= Q(deliver_at_renters_place=True)
-        else:
-            rental_terms_filter &= Q(deliver_at_renters_place=False)
+        with_driver = self.request.query_params.get('with_driver')
+        if with_driver:
+            if with_driver == "true":
+                rental_terms_filter &= Q(with_driver=True)
+            else:
+                rental_terms_filter &= Q(with_driver=False)
+        without_driver = self.request.query_params.get('without_driver')
+        if without_driver:
+            if without_driver == "true":
+                rental_terms_filter &= Q(without_driver=True)
+            else:
+                rental_terms_filter &= Q(without_driver=False)
+        deliver_at_renters_place = self.request.query_params.get(
+            'deliver_at_renters_place')
+        if deliver_at_renters_place:
+            if deliver_at_renters_place == "true":
+                rental_terms_filter &= Q(deliver_at_renters_place=True)
+            else:
+                rental_terms_filter &= Q(deliver_at_renters_place=False)
+
         min_price = self.request.query_params.get('min_price')
         max_price = self.request.query_params.get('max_price')
         if min_price is not None and max_price is not None:
