@@ -79,7 +79,8 @@ class ChangeReserveStatusSerializer(serializers.Serializer):
         return value
 
     def save(self, **kwargs):
-        reserve = self.validated_data["reserve"]
+        reserve_id = self.validated_data["reserve"]
+        reserve = Reserve.objects.get(pk=reserve_id)
         status = self.validated_data["status"]
         if status == ReserveStatus.ACCEPTED:
             reserve.change_status(ReserveStatus.ACCEPTED)
