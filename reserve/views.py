@@ -51,13 +51,13 @@ class ListReserveByCustomer(generics.ListAPIView):
         if status_:
             if status_ == ReserveStatus.ACCEPTED:
                 return Reserve.objects.filter(
-                    user=self.request.user, status=ReserveStatus.ACCEPTED)
+                    user=self.request.user, reserve_status=ReserveStatus.ACCEPTED)
             elif status_ == ReserveStatus.PENDING:
                 return Reserve.objects.filter(
-                    user=self.request.user, status=ReserveStatus.PENDING)
+                    user=self.request.user, reserve_status=ReserveStatus.PENDING)
             elif status_ == ReserveStatus.REJECTED:
                 return Reserve.objects.filter(
-                    user=self.request.user, status=ReserveStatus.REJECTED)
+                    user=self.request.user, reserve_status=ReserveStatus.REJECTED)
         else:
             return Reserve.objects.none()
 
