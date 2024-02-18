@@ -42,9 +42,10 @@ class CreateReserveSerializer(serializers.Serializer):
         with_insurance = self.validated_data["with_insurance"]
         insurance_price = 0
         if with_insurance:
-            insurance_price = obj.insurance_percentage * rental_terms.car_object.car_value
-        value_added = obj.value_added_percentage * \
-            rental_terms.price_each_day * rental_terms.min_days_to_rent
+            insurance_price = (obj.insurance_percentage/100) * \
+                rental_terms.car_object.car_value
+        value_added = (obj.value_added_percentage/100) * \
+            (rental_terms.price_each_day * rental_terms.min_days_to_rent)
         return Reserve.objects.create(
             user=user,
             car=validated_data["car"],
