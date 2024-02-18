@@ -6,11 +6,11 @@ from users.models import CustomUser
 class BasicPaymentInformation(models.Model):
     user = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, verbose_name=_("User"))
-    company_percentage = models.PositiveIntegerField(
+    company_percentage = models.FloatField(
         verbose_name=_("Company_Percentage"))
-    value_added_percentage = models.PositiveIntegerField(
+    value_added_percentage = models.FloatField(
         verbose_name=_("Value_Added_Percentage"))
-    insurance_percentage = models.PositiveIntegerField(
+    insurance_percentage = models.FloatField(
         verbose_name=_("Insurance_Percentage"))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
