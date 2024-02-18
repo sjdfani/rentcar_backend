@@ -38,7 +38,8 @@ class CreateReserveSerializer(serializers.Serializer):
     def create(self, validated_data):
         user = self.context["request"].user
         obj = BasicPaymentInformation.objects.order_by("-pk").first()
-        rental_terms = RentalTerms.objects.get(pk=validated_data["car"].pk)
+        rental_terms = RentalTerms.objects.get(
+            car__pk=validated_data["car"].id)
         with_insurance = self.validated_data["with_insurance"]
         insurance_price = 0
         if with_insurance:
