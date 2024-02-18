@@ -21,8 +21,9 @@ class Reserve(models.Model):
         verbose_name=_("Car"), related_name="reserve_car"
     )
     start_rent_date = models.DateField(verbose_name=_("Start Rent Date"))
-    min_days_to_rent = models.PositiveIntegerField(
-        verbose_name=_("Min Days to Rent"), default=0)
+    end_rent_date = models.DateField(verbose_name=_("Start Rent Date"))
+    days_to_rent = models.PositiveIntegerField(
+        verbose_name=_("Days to Rent"), default=0)
     price_each_day = models.PositiveBigIntegerField(
         verbose_name=_("Price Each Day"), default=0)
     value_added = models.PositiveBigIntegerField(
