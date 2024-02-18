@@ -21,7 +21,19 @@ class CreateReserveSerializer(serializers.Serializer):
         queryset=Car.objects.filter(is_available=True, is_out_of_service=False)
     )
     start_rent_date = serializers.DateField()
+    end_rent_date = serializers.DateField()
     with_insurance = serializers.BooleanField()
+
+    def validate(self, attrs):
+        start_date = attrs.get('start_rent_date')
+        end_date = attrs.get('end_rent_date')
+        if start_date and end_date:
+            if end_date < start_date:
+                raise serializers.ValidationError(
+                    "End date cannot be before start date.")
+            difference = end_date - start_date
+            attrs['days_difference'] = difference.days
+        return attrs
 
     def create(self, validated_data):
         user = self.context["request"].user
@@ -37,7 +49,8 @@ class CreateReserveSerializer(serializers.Serializer):
             user=user,
             car=validated_data["car"],
             start_rent_date=validated_data["start_rent_date"],
-            min_days_to_rent=rental_terms.min_days_to_rent,
+            end_rent_date=validated_data["end_rent_date"],
+            days_to_rent=validated_data["days_difference"],
             price_each_day=rental_terms.price_each_day,
             value_added=value_added,
             with_insurance=with_insurance,
