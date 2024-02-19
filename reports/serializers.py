@@ -13,8 +13,6 @@ class ReportUsersWithAcceptedCarSerializer(serializers.Serializer):
         start_date = self.validated_data.get("start_date", None)
         end_date = self.validated_data.get("end_date", None)
         if start_date and end_date:
-            start_date = datetime.strptime(start_date, '%Y-%m-%d')
-            end_date = datetime.strptime(end_date, '%Y-%m-%d')
             user_count = Car.objects.filter(
                 status=CarStatus.ACCEPTED,
                 created_at__range=(start_date, end_date)
