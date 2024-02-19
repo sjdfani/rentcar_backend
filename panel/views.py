@@ -198,11 +198,11 @@ class ListReserveCar(generics.ListAPIView):
         status_ = self.kwargs.get("status", None)
         if status_:
             if status_ == ReserveStatus.ACCEPTED:
-                return Reserve.objects.filter(status=ReserveStatus.ACCEPTED)
+                return Reserve.objects.filter(reserve_status=ReserveStatus.ACCEPTED)
             elif status_ == ReserveStatus.PENDING:
-                return Reserve.objects.filter(status=ReserveStatus.PENDING)
+                return Reserve.objects.filter(reserve_status=ReserveStatus.PENDING)
             elif status_ == ReserveStatus.REJECTED:
-                return Reserve.objects.filter(status=ReserveStatus.REJECTED)
+                return Reserve.objects.filter(reserve_status=ReserveStatus.REJECTED)
         else:
             return Reserve.objects.none()
 

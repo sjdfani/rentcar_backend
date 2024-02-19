@@ -13,7 +13,7 @@ from .serializers import (
     ManufacturerSerializer, CarModelSerializer, CarOptionsSerializer,
     CarYearSerializer, CreateCarSerializer, ColorSerializer, CarSerializer,
     CreateCommentSerializer, CreateRentalTermsSerializer,
-    UpdateRentalTermsSerializer, UpdateCarSerializer,
+    UpdateRentalTermsSerializer, RentalTermsSerializer, UpdateCarSerializer,
 )
 
 
@@ -140,8 +140,11 @@ class RetrieveCar(generics.RetrieveAPIView):
     serializer_class = CarSerializer
 
     def get_queryset(self):
+        pk = self.kwargs.get("pk", None)
         return Car.objects.filter(
-            status=CarStatus.ACCEPTED, is_out_of_service=False, is_available=True)
+            pk=pk,
+            # status=CarStatus.ACCEPTED, is_out_of_service=False, is_available=True
+            )
 
 
 class RetrieveUpdateDestroyCar(generics.RetrieveUpdateDestroyAPIView):
@@ -179,6 +182,15 @@ class CreateRentalTerms(generics.CreateAPIView):
 class UpdateRentalTerms(generics.RetrieveUpdateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = UpdateRentalTermsSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        pk = self.kwargs.get("pk", None)
+        return RentalTerms.objects.filter(pk=pk, car_object__owner=user)
+
+class RetrieveRentalTerms(generics.RetrieveAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = RentalTermsSerializer
 
     def get_queryset(self):
         user = self.request.user
