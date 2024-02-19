@@ -169,6 +169,12 @@ class RentalTermsSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class CarImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CarImage
+        fields = "__all__"
+
+
 class CarSerializer(serializers.ModelSerializer):
     owner = UserSerializer(read_only=True)
     car_template = CarTemplateSerializer(read_only=True)
@@ -185,6 +191,8 @@ class CarSerializer(serializers.ModelSerializer):
         res = super().to_representation(instance)
         obj = RentalTerms.objects.filter(car_object__pk=instance.pk).first()
         res["rental_terms"] = RentalTermsSerializer(obj).data
+        car_images_obj = CarImage.objects.filter(car_object__pk=instance.pk)
+        res["car_images"] = CarImageSerializer(car_images_obj, many=True).data
         return res
 
 
