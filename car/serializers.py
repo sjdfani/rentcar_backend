@@ -102,10 +102,11 @@ class UpdateCarTemplateSerializer(serializers.ModelSerializer):
             obj = TechnicalSpecifications.objects.create(
                 **technical_specifications)
             instance.Technical_specifications = obj
-        category = validated_data.get(category, None)
-        if category:
-            instance.category.set(category)
+        categories = validated_data.get("category", None)
+        if categories:
+            instance.category.set(categories)
         instance.save()
+        return instance
 
 
 class CreateCarTemplateSerializer(serializers.Serializer):
