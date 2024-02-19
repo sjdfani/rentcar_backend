@@ -31,13 +31,13 @@ class ListReserveCarOwner(generics.ListAPIView):
         if status_:
             if status_ == ReserveStatus.ACCEPTED:
                 return Reserve.objects.filter(
-                    car__owner=self.request.user, status=ReserveStatus.ACCEPTED)
+                    car__owner=self.request.user, reserve_status=ReserveStatus.ACCEPTED)
             elif status_ == ReserveStatus.PENDING:
                 return Reserve.objects.filter(
-                    car__owner=self.request.user, status=ReserveStatus.PENDING)
+                    car__owner=self.request.user, reserve_status=ReserveStatus.PENDING)
             elif status_ == ReserveStatus.REJECTED:
                 return Reserve.objects.filter(
-                    car__owner=self.request.user, status=ReserveStatus.REJECTED)
+                    car__owner=self.request.user, reserve_status=ReserveStatus.REJECTED)
         else:
             return Reserve.objects.none()
 

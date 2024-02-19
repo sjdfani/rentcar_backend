@@ -306,3 +306,9 @@ class UpdateRentalTermsSerializer(serializers.ModelSerializer):
     class Meta:
         model = RentalTerms
         exclude = ("car_object",)
+
+
+class RentalTermsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RentalTerms
+        fields = "__all__"

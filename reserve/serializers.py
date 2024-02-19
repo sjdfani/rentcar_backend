@@ -100,7 +100,7 @@ class PaymentReserveSerializer(serializers.Serializer):
         if value < 0:
             raise serializers.ValidationError("Please enter positive value.")
         if not Reserve.objects.filter(
-                pk=value, user=user, status=ReserveStatus.ACCEPTED).exists():
+                pk=value, user=user, reserve_status=ReserveStatus.ACCEPTED).exists():
             raise serializers.ValidationError(
                 "Please enter your car reservation id.")
         return value
@@ -109,19 +109,21 @@ class PaymentReserveSerializer(serializers.Serializer):
         user = self.context["request"].user
         obj = BasicPaymentInformation.objects.order_by("-pk").first()
         reserve = Reserve.objects.get(pk=self.validated_data["reserve"])
+        rental_terms = RentalTerms.objects.get(car_object__id=reserve.car.pk)
+
         reserve.payment_process(
             tracking_payment=self.validated_data["tracking_payment"],
             bank_name=self.validated_data["bank_name"],
         )
         Deposit.objects.create(
             reserve=reserve,
-            rent_price=reserve.price_each_day * reserve.min_days_to_rent,
+            rent_price=rental_terms.price_each_day * rental_terms.min_days_to_rent,
             car_value=reserve.car.car_value,
             company_percentage=obj.company_percentage,
             value_added_percentage=obj.value_added_percentage,
             insurance_percentage=obj.insurance_percentage,
         )
-        total_price_rent = reserve.min_days_to_rent * reserve.price_each_day
+        total_price_rent = rental_terms.min_days_to_rent * rental_terms.price_each_day
         user_share_price = total_price_rent - \
             (total_price_rent * obj.company_percentage)
         wallet = Wallet.objects.get(user=user)
@@ -141,7 +143,8 @@ class FinishRentTimeSerializer(serializers.Serializer):
         return value
 
     def save(self, **kwargs):
-        reserve = Reserve.objects.get(self.validated_data["reserve"])
+        reserve_id = self.validated_data["reserve"]
+        reserve = Reserve.objects.get(pk=reserve_id)
         car = Car.objects.get(pk=reserve.car.pk)
         car.is_available = True
         car.save()
