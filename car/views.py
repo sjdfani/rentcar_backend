@@ -122,15 +122,27 @@ class CarList(generics.ListAPIView):
             is_available=True
         )
 
-        if self.request.query_params.get('body_style'):
-            queryset = queryset.filter(
-                car_template__Technical_specifications__body_style=self.request.query_params.get('body_style'))
+        body_styles = self.request.query_params.getlist(
+            'body_style')
+        if body_styles:
+            body_style_filters = Q()
+            for body_style in body_styles:
+                body_style_filters |= Q(
+                    car_template__Technical_specifications__body_style=body_style)
+            queryset = queryset.filter(body_style_filters)
         if self.request.query_params.get('manufacturer'):
             queryset = queryset.filter(
                 car_template__model__manufacturers__name=self.request.query_params.get('manufacturer'))
         if self.request.query_params.get('model'):
             queryset = queryset.filter(
                 car_template__model__name=self.request.query_params.get('model'))
+        categories = self.request.query_params.getlist(
+            'category')
+        if categories:
+            category_filters = Q()
+            for category_id in categories:
+                category_filters |= Q(car_template__category__id=category_id)
+            queryset = queryset.filter(category_filters)
 
         return self.paginate_queryset(queryset)
 
@@ -144,7 +156,7 @@ class RetrieveCar(generics.RetrieveAPIView):
         return Car.objects.filter(
             pk=pk,
             # status=CarStatus.ACCEPTED, is_out_of_service=False, is_available=True
-            )
+        )
 
 
 class RetrieveUpdateDestroyCar(generics.RetrieveUpdateDestroyAPIView):
@@ -187,6 +199,7 @@ class UpdateRentalTerms(generics.RetrieveUpdateAPIView):
         user = self.request.user
         pk = self.kwargs.get("pk", None)
         return RentalTerms.objects.filter(pk=pk, car_object__owner=user)
+
 
 class RetrieveRentalTerms(generics.RetrieveAPIView):
     permission_classes = (AllowAny,)
