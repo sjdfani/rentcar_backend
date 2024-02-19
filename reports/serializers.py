@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from rest_framework import serializers
 from car.models import Car, CarStatus
 from reserve.models import Reserve
