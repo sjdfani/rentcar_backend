@@ -183,10 +183,15 @@ class CarSerializer(serializers.ModelSerializer):
     color = ColorSerializer(read_only=True)
     year = CarYearSerializer(read_only=True)
     car_option = CarOptionsSerializer(many=True)
+    comments = serializers.SerializerMethodField()
 
     class Meta:
         model = Car
         fields = "__all__"
+
+    def get_comment(self, obj):
+        comment_objs = Comment.objects.filter(car_object__pk=obj.pk)
+        return CommentSerializer(comment_objs, many=True).data
 
     def to_representation(self, instance):
         res = super().to_representation(instance)
@@ -194,6 +199,8 @@ class CarSerializer(serializers.ModelSerializer):
         res["rental_terms"] = RentalTermsSerializer(obj).data
         car_images_obj = CarImage.objects.filter(car_object__pk=instance.pk)
         res["car_images"] = CarImageSerializer(car_images_obj, many=True).data
+        # comment_objs = Comment.objects.filter(car_object__pk=instance.pk)
+        # res["comments"] = CommentSerializer(comment_objs, many=True).data
         return res
 
 
