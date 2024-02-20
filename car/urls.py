@@ -38,7 +38,7 @@ urlpatterns = [
 
     path("rentalTerms/create/", CreateRentalTerms.as_view(),
          name="UpdateRentalTerms"),
-     path("rentalTerms/retrieve/<int:pk>/", RetrieveRentalTerms.as_view(),
+    path("rentalTerms/retrieve/<int:pk>/", RetrieveRentalTerms.as_view(),
          name="RetrieveRentalTerms"),
     path("rentalTerms/update/<int:pk>/", UpdateRentalTerms.as_view(),
          name="UpdateRentalTerms"),

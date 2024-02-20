@@ -13,6 +13,8 @@ from .serializers import (
 from .models import CustomUser
 from .utils import get_tokens_for_user
 from .permissions import IsSuperuser
+from car.models import Comment, Car, CarStatus
+from car.serializers import CommentSerializer, CarSerializer
 
 
 class Login(APIView):
@@ -121,3 +123,22 @@ class ConfirmForgotPassword(APIView):
         if state:
             return Response(message, status=status.HTTP_200_OK)
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserDetails(APIView):
+    def get(self, request):
+        pk = self.kwargs.get("pk", None)
+        user_obj = CustomUser.objects.filter(pk=pk)
+        if user_obj.exists():
+            user = user_obj.first()
+            comment_objs = Comment.objects.filter(user=user)
+            car_objs = Car.objects.filter(
+                owner=user, status=CarStatus.ACCEPTED)
+            message = {
+                "user_info": UserSerializer(user).data,
+                "comments": CommentSerializer(comment_objs, many=True).data,
+                "cars": CarSerializer(car_objs, many=True).data,
+            }
+            return Response(message, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
